@@ -8,12 +8,16 @@ import (
 	"os"
 )
 
+func serveIndex(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "index.html")
+	return
+}
+
 func uploadFile(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("File Upload Endpoint Hit")
-
 	r.ParseMultipartForm(10 << 20)
-	file, handler, err := r.FormFile("myFile")
-	http.ServeFile(w, r, "index.html")
+	file, handler, err := r.FormFile("file")
+
 	if err != nil {
 		fmt.Println("Error Retrieving the File")
 		fmt.Println(err)
@@ -50,6 +54,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func setupRoutes() {
+	http.HandleFunc("/", serveIndex)
 	http.HandleFunc("/v1/upload", uploadFile)
 	http.ListenAndServe(":8080", nil)
 }
