@@ -10,11 +10,11 @@ import (
 
 const Port = ":8080"
 
-//func serveIndex(w http.ResponseWriter, r *http.Request) {
-//	//http.FileServer(http.Dir("./static"))
-//	http.ServeFile(w, r, "index.html")
-//	return
-//}
+func serveIndex(w http.ResponseWriter, r *http.Request) {
+	//http.FileServer(http.Dir("./static"))
+	http.ServeFile(w, r, "index.html")
+	return
+}
 
 func uploadFile(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("File Upload Endpoint Hit")
@@ -57,14 +57,12 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func setupRoutes() {
-	//http.HandleFunc("/", fs)
+	http.HandleFunc("/", serveIndex)
 	http.HandleFunc("/api/v1/upload", uploadFile)
 	log.Printf("Application Started on %v", Port)
 	log.Fatal(http.ListenAndServe(Port, nil))
 }
 
 func main() {
-	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	setupRoutes()
 }
